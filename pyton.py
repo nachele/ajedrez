@@ -13,7 +13,11 @@ class Pieza:
         self.dibujo = pygame.image.load(imagen)
         
     def dibujar(self):
+        posicionRaton = pygame.mouse.get_pos()
+        if posicionRaton[0] > self.x and posicionRaton[0] < self.x + 100 and posicionRaton[1] > self.y and posicionRaton[1] < self.y + 100:
+            print(self.nombre)
         pantalla.blit(self.dibujo,(self.x,self.y))
+
 indiceDecrece = [2,1,0]        
 
 piezas = []
@@ -30,27 +34,54 @@ def crearPiezas():
             for x in indiceDecrece:
                 global sumando
                 direccionImagen += str(x) + ".png"
-                print(direccionImagen)
                 piezas.append(Pieza((7 - x) * 100,0, direccionImagen))
                 direccionImagen = "piezas/"
                 sumando = sumando + 1
-                print(x)
+                
+    for i in range (8):
+        piezas.append(Pieza(i * 100, 100, direccionImagen + "5.png"))
+    direccionImagen = "piezas/"
+indiceNegras = [7,8,9,10,11]
+indiceNegrasDecrece = [9,8,7]
+variableNegras = 5
+variableNegras1 = 0
+def crearPiezasNegras():
+    global variableNegras1
+    global direccionImagen
+    global indiceNegrasDecrece
+    for i in indiceNegras:
+        direccionImagen += str(i) + ".png"
+        piezas.append(Pieza(variableNegras1 * 100,700,direccionImagen))
+        direccionImagen = "piezas/"
+        variableNegras1 += 1
+        if i == 11:
+            for x in indiceNegrasDecrece:
+                global variableNegras
+                
+                direccionImagen += str(x) + ".png"
+                piezas.append(Pieza(variableNegras * 100, 700, direccionImagen))
+                variableNegras += 1
+                direccionImagen = "piezas/"
+    for i in range (8):
+        piezas.append(Pieza(i * 100, 600, direccionImagen + "6.png"))
+        direccionImagen = "piezas/"
 def PintarCuadro():
     #pygame.draw.rect(pantalla, colores[0], (100,100,100,100),0)
     for fila in range (nfilas):
         for columna in range (ncolumnas):
             pygame.draw.rect(pantalla, colores[(columna + fila)%2], (columna * 100, fila * 100, 100,100),0)
 
+
 def PintarPieza():
     for pieza in piezas:
-        print(pieza.nombre)
         pieza.dibujar()
 
 
 
    
-
-
+pygame.mouse.set_cursor(pygame.cursors.diamond)
+crearPiezas()
+crearPiezasNegras()
 
 running = True
 while running:
@@ -59,7 +90,6 @@ while running:
             running = False
     pantalla.fill("white")
     PintarCuadro()
-    crearPiezas()
     PintarPieza()
     pygame.display.flip()
 
