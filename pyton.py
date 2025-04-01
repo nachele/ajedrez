@@ -8,18 +8,20 @@ sumando = 0
 booleano = False
 piezaMoviendose = 0
 variable = 0
+booleanoSiguiente = False
 class Pieza:
     def __init__(self, x , y, imagen):
         self.nombre = imagen
         self.x = x
         self.y = y
         self.dibujo = pygame.image.load(imagen)
-        self.booleano = False
+        self.booleano = booleanoSiguiente
         self.moviendo = variable
     
         
     def mover(self):
         global variable
+        global booleanoSigueite
         posicionRaton = pygame.mouse.get_pos()
         teclaRaton = pygame.mouse.get_pressed()
         if posicionRaton[0] > self.x and posicionRaton[0] < self.x + 100 and posicionRaton[1] > self.y and posicionRaton[1] < self.y + 100 and teclaRaton[0] == True:
@@ -28,12 +30,21 @@ class Pieza:
             if variable == 1:
                 self.moviendo = variable
             if self.moviendo == 1:
-                self.booleano = True             
+                self.booleano = True  
+        elif  self.moviendo == 1:
+            if self.x > posicionRaton[0] or self.x + 100 < posicionRaton[0]:
+                self.booleano = False
+            if self.y > posicionRaton[1] or self.y + 100 < posicionRaton[1]:
+                self.booleano = False
+                   
         if self.booleano == True and teclaRaton[0]:
             self.x = posicionRaton[0] - 50
             self.y = posicionRaton[1] -50
-          
+
+
+
         pantalla.blit(self.dibujo,(self.x,self.y))
+        variable = 0
 
         
     
@@ -50,8 +61,6 @@ piezas = []
 direccionImagen = "piezas/"
 
 
-def mouseTecla():
-    print(pygame.mouse.get_pressed())
 def crearPiezas():
     global direccionImagen
     for i in range(5):
@@ -120,7 +129,6 @@ while running:
     pantalla.fill("white")
     PintarCuadro()
     PintarPieza()
-    mouseTecla()
     pygame.display.flip()
 
 pygame.quit()
