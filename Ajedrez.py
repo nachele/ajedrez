@@ -1,13 +1,21 @@
 import pygame
+import math
 pygame.init()
 pantalla = pygame.display.set_mode((800,800))
 colores = [(0,255,0),(255,255,255)]
 nfilas = 8
 ncolumnas = 8
 piezas = []
+campo = []
 direccionImagen = "piezas/"
-variable = 0
+variable = 1000
 seleccionadaIndicie = 0
+casillaPiezaDistancia = 0
+h = 0
+class Campo : 
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
 
 class Ficha:
@@ -22,14 +30,25 @@ class Ficha:
     def pintar(self):
         pantalla.blit(self.dibujo,(self.x,self.y))
     def mouseOn(self):
+        global variable
         global seleccionadaIndicie
-        if posicionRaton()[0] > self.x and posicionRaton()[0] < self.x + 100 and posicionRaton()[1] > self.y and posicionRaton()[1] < self.y + 100 and teclaMouse()[0] == True and seleccionadaIndicie < 2:
+        global h
+        if posicionRaton()[0] >= self.x and posicionRaton()[0] <= self.x + 100 and posicionRaton()[1] >= self.y and posicionRaton()[1] <= self.y + 100 and teclaMouse()[0] == True and seleccionadaIndicie < 2:
             self.seleccionada = True
             seleccionadaIndicie += 1
         elif teclaMouse()[0] == False:
             self.seleccionada = False
             seleccionadaIndicie = 0
+            for casilla in campo:
+               if posicionRaton()[0] >= self.x and posicionRaton()[0] <= self.x + 100 and posicionRaton()[1] >= self.y and posicionRaton()[1] <= self.y + 100:
+                    h = math.sqrt(((self.x  - casilla.x)**2) + ((self.y  - casilla.y)**2))
+    
+            print (h)
+        print(variable)
 
+
+                
+                
     def movimiento(self):
         if self.seleccionada == True:
             self.x = posicionRaton()[0] - 50
@@ -41,7 +60,15 @@ def teclaMouse():
     return pygame.mouse.get_pressed()
 
 
-
+def puntomedioCampo():
+    global campo
+    for fila in range(nfilas):
+        for columna in range(ncolumnas):
+            campo.append(Campo((columna * 100) + 50, (fila * 100) + 50))
+puntomedioCampo()
+for c in campo:
+    print(c.x)
+    print(c.y)
 
 
 
@@ -49,7 +76,6 @@ def PintarCuadro():
     #pygame.draw.rect(pantalla, colores[0], (100,100,100,100),0)
     for fila in range (nfilas):
         for columna in range (ncolumnas):
-
             pygame.draw.rect(pantalla, colores[(columna + fila)%2], (columna * 100, fila * 100, 100,100),0)
             
 def crearPiezas():
@@ -70,7 +96,6 @@ def PintarPiezas():
         pieza.mouseOn()
         pieza.movimiento()
         pieza.pintar()
-
 
             
 
